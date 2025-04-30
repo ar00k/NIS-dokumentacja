@@ -1,0 +1,129 @@
+%! Pobieranie PDF
+% ctrl + shift + ~
+% komenda: upload.sh
+
+%! SKRÓTY KLAWISZOWE
+% LINK do skrótów klawiszowych: https://github.com/James-Yu/latex-workshop/wiki/Snippets
+% ctrl+alt+j - przeniesienie z kodu do pdf
+% ctrl + click - przeniesienie z pdf do kodu (dokument.pdf)
+% zaznaczony fragment kodu -> ctrl+l -> ctrl+w
+% gdy kuror na sekcji itp. -> cltr + alt + ] - obniżenie sekcji
+% gdy kuror na sekcji itp. -> cltr + alt + [ - podniesienie sekcji
+% kopia lini kodu -> ctrl + shift + strzałka w dół
+\newpage
+\section*{Tutorial}		%1
+
+% * SPOSOBY UZYWANIA MAKRA HERE * # 
+% ? Listingi
+% Parametr #1: Opis listingu (wyświetla sie bezpośrednio pod listingiem)
+% Parametr #2 : Nazwa pliku oraz ID do oznaczania (wazne, zeby byl w katalogu kod oraz jego rozszerzenie to txt) 
+
+\ListingFile{OpisPromptu}{prompt}
+
+Tak wstawiamy listingi, za pomocą:
+
+\begin{verbatim}
+	ListingFile\{Opis listingu}{nazwa-pliku} 
+ \end{verbatim}
+
+wstawiamy listingi z plików z katalogu kod.
+
+Gdzie:
+\begin{verbatim}
+	{Opis listingu} - opis listingu wyświetlany pod listingiem
+	{nazwa-pliku} - nazwa pliku z katalogu kod i jednocześnie ID do oznaczania
+\end{verbatim}
+
+Tak oznaczamy listingi \OznaczKod{prompt} w tekście.\\Za pomocą:
+
+\begin{verbatim}
+	ListingFile\{Opis listingu}{nazwa-pliku} 
+\end{verbatim}
+
+gdzie:
+
+\begin{verbatim}
+	{nazwa-pliku} - nazwa pliku z katalogu kod i jednocześnie ID do oznaczania
+\end{verbatim}
+
+\clearpage
+% ? Zdjęcia
+% OPCJONALNY Parametr #1: Szerokość zdjęcia (domyślnie jest to szerokość paragrafu ale jak sie poda w [#1] to wtedy zmienia się na podaną wartość)
+% Parametr #2: Nazwa pliku z rozszerzeniem (podajemy katalog w którym jest plik i jego rozszerzenie np. rys/nazwa-rysunku.png)
+% Parametr #3: Opis tego co jest na rysunku (wyświetla sie bezpośrednio pod rysunkiem) 
+% Parametr #4: Identyfikator rysunku (do oznaczania zdjęć w tekście) 
+
+\fg{rys/nazwa-rysunku.png}{Opis tego co jest na rysunku}{id-rysunku}
+
+jest równe
+\fg[\textwidth]{rys/nazwa-rysunku.png}{Opis tego co jest na rysunku}{id-rysunku}
+\clearpage
+Tak wstawiamy zdjęcia, za pomocą:
+
+\begin{verbatim}
+	\fg{szerokość-rysunku}{nazwa-pliku}{Opis rysunku}{id-rysunku} 
+ \end{verbatim}
+
+Gdzie:
+\begin{verbatim}
+	{szerokość-rysunku} - szerokość rysunku domyślnie \textwidth
+	{nazwa-pliku} - nazwa pliku z katalogu rys i jego rozszerzenie
+	{Opis rysunku} - opis rysunku wyświetlany pod rysunkiem
+	{id-rysunku} - identyfikator rysunku
+\end{verbatim}
+
+Tak oznaczamy zdjęcia \OznaczZdjecie{id-rysunku} w tekście. Za pomocą:
+
+\begin{verbatim}
+	\OznaczZdjecie{id-rysunku}
+	\end{verbatim}
+
+
+
+\section{Założenia projektowe – wymagania}		%1
+\begin{enumerate}
+    \item Utworzenie własnej domeny AD według formatu firma.ad, gdzie firma to nazwa firmy dla której
+          przygotowujemy projekt.
+    \item Autoryzacja pracownika przy użyciu imiennego konta działającego na wszystkich komputerach w
+          sieci firmowej. Login zgodny ze schematem: imie.nazwisko. Utworzyć minimum po trzy konta dla
+          każdego wydziału. Tworzenie grup oraz kont w domenie wykonywać przez skrypt, który odczyta
+          dane grupy, konta z pliku i utworzy w domenie AD.
+    \item Pracownicy powinni należeć do grupy globalnej odpowiedniej dla wydziału w którym
+          pracują(przewidzieć 5 przykładowych wydziałów, np. kadry, place, gospodarczy, marketing, itp wg.
+          własnego uznania). W przedsiębiorstwie przewidziano wydział informatyczny, którego pracownicy
+          mają w pełni administrować domeną przedsiębiorstwa. Tworzenie grup oraz kont w domenie
+          wykonywać przez skrypt, który odczyta dane grupy, konta z pliku i utworzy w domenie AD.
+    \item Pracownicy powinni korzystać z zasobów sieciowych o nazwach: wspolny, oraz zasób wydziałowy
+          (oddzielny zasób dla każdego wydziału). Zasoby powinny być udostępnione poprzez klaster pracy
+          awaryjnej, który powinien korzystać z przestrzeni dyskowej (macierzy RAID-1) udostępnionej
+          poprzez iSCSI o przestrzeni wypadkowej 30GB. Jeśli pozwalają zasoby sprzętowe to programową
+          macierz RAID-1, oraz iSCSI Target Serwer można zainstalować na oddzielnym serwerze o nazwie
+          SMPXX.firma.ad.
+    \item Zasób wspolny ma być mapowany użytkownikowi jako dysk (patrz: założenia projektowej),
+          natomiast zasób wydziałowy jako jeden z dysków (patrz: założenia projektowej) adekwatnie do
+          grupy wydziałowej w której się pracownik znajduje. Mechanizm mapowania automatyczny przy
+          użyciu polis GPO.
+    \item System ma umożliwić instalację stacji klienckich z obrazu udostępnionego na serwerze.
+    \item Pracownicy powinni mieć dostęp do drukarek sieciowych udostępnianych poprzez serwer wydruków. Serwer wydruków można zainstalować na oddzielnym serwerze, np. o nazwie \texttt{SPRXXfirma.ad}, lub w przypadku małych zasobów, na serwerze \texttt{SDC}. Dostęp do drukarki \texttt{\textbackslash\textbackslash SPRXX-firma.ad\textbackslash nazwa-drukarki}.
+          \newpage
+    \item Konfiguracja stacji klienckich w sposób automatyczny.
+    \item Na klastrze pracy awaryjnej należy wdrożyć DHCP Serwer.
+    \item Po udanym wdrożeniu serwera DHCP, wyłączyć serwer DHCP pracujący na SDC
+    \item Wdrożyć serwer WWW wraz z firmową stroną (nie domyślną) dostępną pod adresem
+          www.firma.ad.
+    \item Wdrożyć WordPress współpracujący z usługą IIS Windows Serwera 2022.
+\end{enumerate}
+\subsection{Założenia projektowe}
+\begin{itemize}
+    \item nazwy serwerów powinny być zgodne ze schematem, przykładowo: SDCXX-NSACZ.firma.ad. - gdzie
+          XX oznacza ostatnie dwie cyfry w numerze albumu,
+    \item przyjąć adresację sieci jak niżej: 192.168.XX.40/24 - gdzie XX oznacza ostatnie dwie cyfry w numerze albumu,
+    \item Zasoby sieciowe udostępnione na klastrze FC powinny być widoczne dla komputerów w postaci ścieżki UNC jako \texttt{\textbackslash\textbackslash sfsXX.firma.ad\textbackslash zasob}, \\ oraz \texttt{\textbackslash\textbackslash sfsXX.firma.ad\textbackslash wydzial} (nazwa wydziału), gdzie \texttt{XX} oznacza ostatnie dwie cyfry w numerze albumu.
+    \item mapowanie dysków zgodnie ze schematem:
+          zasób wspolny jako dysk X: , dyski wydziałowe(oddzielny zasób dla każdego wydziału) od G do K,
+    \item  zaprojektować polisy tworzącą katalog c:\textbackslash ProjektyXX na stacjach końcowych, oraz ustawiającą
+          zmienną środowiskową FIRMA=Nazwa, gdzie XX oznacza ostatnie dwie cyfry w numerze albumu,
+    \item zakres adresacji IP dla stacji końcowych w zakresie od 100 ... do 200, uwzględnić funkcjonalność DHCP Serwer’a uruchomionego na klastrze,
+    \item na stacji zainstalować drukarkę sieciową udostępnioną przez serwer wydruków i pokazać jej
+          działanie.
+\end{itemize}
