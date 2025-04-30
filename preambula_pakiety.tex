@@ -42,7 +42,7 @@
 %grafika i geometria strony
 \usepackage{extsizes}           %Dostepne inne rozmiary czcionek, np. 14 w poleceniu: \documentclass[14pt]{article}.
 \usepackage[final]{graphicx}
-\usepackage[a4paper,left=3.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+\usepackage[a4paper,left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
 
 %strona tytułowa
 \usepackage{strona_tytulowa}
@@ -124,7 +124,7 @@ literate=
 {Ó}{{\'O}}1 {Ś}{{\'S}}1 {Ź}{{\'Z}}1 {Ż}{{\.{Z}}}1
 }
 
-\lstset{style=mystyle} % Deklaracja aktywnego stylu
+ \lstset{style=mystyle} % Deklaracja aktywnego stylu
 %===========
 
 %PAGINA GÓRNA I DOLNA
@@ -132,7 +132,7 @@ literate=
 \pagestyle{fancy}
 \fancyhf{}
 % numery stron na środku dolnej stopki
-\fancyfoot[C]{\footnotesize DOKUMENTACJA PROJEKTOWA – SYSTEMY OPERACYJNE  \\
+\fancyfoot[C]{\footnotesize \MakeUppercase{Bezpieczeństwo systemów informatycznych}  \\
   \normalsize\sffamily  \thepage\ z~\pageref{LastPage}}
 
 %\fancyhead[L]{\small\sffamily \nouppercase{\leftmark}}
