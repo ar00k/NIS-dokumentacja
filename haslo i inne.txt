@@ -1,0 +1,60 @@
+--SETUP--
+arkadiusz - main
+user1 - node 1
+user2 - node 2
+12345
+
+sudo apt update && sudo apt upgrade -y
+
+sudo apt install ubuntu-desktop (dla komfortu pracy.. kompletnie zbędny dla funkcjonalnosci)
+
+sudo systemctl set-default graphical.target
+
+zamontowac wczesniej addon..
+
+sudo mount /dev/cdrom /mnt
+cd /mnt
+sudo ./VBoxLinuxAdditions.run
+
+potem w opcjach (2 kierunkowe przeciaganie i schowek)
+
+
+-----NIS---------
+
+
+sudo nisdomainname nisArek
+
+KLUCZOWE ZMIANY
+
+# /etc/default/nis
+YPPWDDIR=/etc
+YPCHANGEOK=chsh
+NISSERVER=master  # <-- TO JEST KLUCZOWA LINIA!
+NISMASTER=nisArek  # (opcjonalnie, jeśli masz wielu serwerów)
+YPSERVARGS=""
+
+# /etc/ypserv.securenets
+# Zawsze zezwalaj na localhost (IPv4 i IPv6)
+255.0.0.0       127.0.0.0
+host            ::1
+
+# Dostęp tylko dla podsieci (192.168.10.0/24)
+255.255.255.0   192.168.10.0
+
+# Odrzuć wszystkie inne połączenia (domyślne zachowanie)
+
+# /etc/yp.conf
+
+domain nisArek server 192.168.10.10
+
+
+
+potem
+
+sudo systemctl enable ypserv yppasswdd ypxfrd 
+
+zeby sie odpalalo z systemem odrazu
+
+sudo reboot i patrzymy czy gra
+
+jak gra to bangla dalej
