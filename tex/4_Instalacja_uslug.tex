@@ -42,7 +42,7 @@
 		  {Ś}{{\'S}}1 
 		  {Ź}{{\'Z}}1 
 		  {Ż}{{\.{Z}}}1,
-		emph={sudo,apt-get,grep,awk,sed,chmod,chown,mv,cp,rm,mkdir,rmdir,cat,ps,kill,service,systemctl,apt},
+		emph={sudo,apt-get,grep,awk,sed,chmod,chown,mv,cp,rm,mkdir,rmdir,cat,ps,kill,service,systemctl,apt,domain,ypinit,ypserv,ypbind,ypwhich,ypcat,ypmatch,ypdomainname},
 		emphstyle=\color{magenta!70!black},
 		lineskip=2pt,
 		aboveskip=10pt,
@@ -55,7 +55,7 @@
 % (W podpunktach zamieścić polecenia dotyczące instalacji wdrażanych usług) 
 \subsection{Setup Maszyn Wirtualnych}
 
-Wszystkie poniższe kroki tj: \OznaczZdjecie[Rys.]{setup-01} - \OznaczZdjecie[Rys.]{setup-08} są wykonywane na maszynie każdej maszynie wirtualnej to jest: \texttt{MAIN}, \texttt{node1} oraz \texttt{node2}.
+Wszystkie poniższe kroki tj: \OznaczZdjecie[Rys.]{setup-01} - \OznaczZdjecie[Rys.]{setup-07} są wykonywane na maszynie każdej maszynie wirtualnej to jest: \texttt{MAIN}, \texttt{node1} oraz \texttt{node2}.
 
 \fg[0.75\linewidth]{rys/setup/01.png}{Rozpoczęcie instalacji serwera}{setup-01}
 \fg[0.75\linewidth]{rys/setup/02.png}{Wybór języka systemu}{setup-02}
@@ -151,7 +151,7 @@ Potem dodajemy linikę do pliku \texttt{/etc/yp.conf} aby nasz serwer NIS był w
 \fg[0.75\linewidth]{rys/NIS-CLIENT/03.png}{03}{NIS-CLIENT-03}
 
 \clearpage
-Następnie restartujemy usługę ypbind.\\
+Następnie restartujemy usługę \texttt{ypbind}.\\
 
 \fg[0.75\linewidth]{rys/NIS-CLIENT/04.png}{Reset usługi ypbind}{NIS-CLIENT-04}
 
@@ -163,6 +163,42 @@ Wykonujemy komendę \texttt{sudo reboot}, potem sprawdzamy zawartość pliku pas
 \subsection{Instalacja i konfiguracja NFS (main)}
 \label{sec:nfs-installation}
 
+Zaczynam od instalacji NFS na serwerze głównym \texttt{MAIN}.\\
+\fg[0.75\linewidth]{rys/NFS/01.png}{Instalacja usługi NFS}{NFS-01}
 
+Następnie tworzymy katalogi, które będą udostępniane przez NFS. W tym przypadku są to \texttt{/srv/public} oraz \texttt{/srv/restricted}.\\
+\fg[0.75\linewidth]{rys/NFS/02.png}{Tworzenie katalogów}{NFS-02}
 
+Następnie tworzymy użytkowników i grupy, które będą miały dostęp do katalogów.\\
 
+\begin{lstlisting}[ caption={Tworzenie użytkowników i grup}, label={lst:nfs-users}]
+
+	sudo adduser --shell /bin/bash --home /home/nisuser1 nisuser1
+	sudo adduser --shell /bin/bash --home /home/nisuser2 nisuser2
+	
+	sudo groupadd nisusers
+	
+	sudo usermod -aG nisusers nisuser1  
+	sudo usermod -aG nisusers nisuser2 
+	
+	sudo chmod 777 /srv/public        # Pełne uprawnienia dla wszystkich
+	sudo chmod 770 /srv/restricted    # Ograniczone uprawnienia
+	sudo chown nobody:nogroup /srv/public
+	sudo chown root:nisusers /srv/restricted 
+	\end{lstlisting}
+\clearpage
+% \fg[0.75\linewidth]{rys/NFS/03.png}{03}{NFS-03}
+Następnie edytujemy plik \texttt{/etc/exports} aby dodać katalogi, które będą udostępniane przez NFS dla poszczególnych adresów IP. W tym przypadku są to \texttt{/srv/public} oraz \texttt{/srv/restricted}. \texttt{/srv/restricted} będzie dostępny dla obydwu użytkowników, ale tylko \texttt{node2} będzie mógł zapisywać zawartość do tego katalogu (atrybut \texttt{rw}).\\
+\fg[0.75\linewidth]{rys/NFS/04.png}{Edycja pliku \texttt{/srv/restricted}}{NFS-04}
+
+Potem wykonujemy polecenie \texttt{sudo exportfs -arv} aby zaktualizować plik \texttt{/etc/exports}. Potem uruchamiamy usługę NFS oraz sprawdzamy czy działa.\\
+
+\fg[0.75\linewidth]{rys/NFS/05.png}{Polecenie \texttt{sudo exportfs -arv}}{NFS-05}
+\clearpage
+\fg[0.75\linewidth]{rys/NFS/06.png}{Sprawdzanie statusu \texttt{nfs-server} oraz folderów eksportowanych}{NFS-06}
+
+\fg[0.75\linewidth]{rys/NFS/07.png}{Sprawdzanie zamontowanych katalogów}{NFS-07}
+% \fg[0.75\linewidth]{rys/NFS/08.png}{08}{NFS-08}
+\clearpage
+
+% \fg[0.75\linewidth]{rys/NFS/09.png}{09}{NFS-09}
