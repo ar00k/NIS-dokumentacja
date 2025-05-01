@@ -101,3 +101,55 @@ rpc:            db files
 netgroup:       nis [SUCCESS=return] sss
 automount:  sss
 
+--NFS(serwer)--
+
+sudo apt update
+sudo apt install nfs-kernel-server  # Na serwerze
+
+
+sudo systemctl enable --now nfs-server rpcbind
+
+sudo adduser --shell /bin/bash --home /home/nisuser1 nisuser1
+sudo adduser --shell /bin/bash --home /home/nisuser2 nisuser2
+
+sudo groupadd nisusers
+
+sudo usermod -aG nisusers nisuser1  # lub nisUser1
+sudo usermod -aG nisusers nisuser2  # lub nisUser2
+
+
+sudo mkdir -p /srv/public /srv/restricted
+sudo chmod 777 /srv/public          # Pełne uprawnienia dla wszystkich
+sudo chmod 775 /srv/restricted      # Ograniczone uprawnienia
+sudo chown nobody:nogroup /srv/public
+sudo chown root:nisusers /srv/restricted  # Grupa "nisusers" musi istnieć
+
+
+sudo nano /etc/exports
+
+# Pełen dostęp do public 
+ /srv/public 192.168.10.0/24(rw,sync,no_subtree_check,no_root_squash)
+# node 1 odczyt, node 2 zapis
+ /srv/restricted 192.168.10.20(ro,sync) 192.168.10.30(rw,sync)  
+
+sudo exportfs -arv 
+sudo systemctl restart nfs-server
+
+--NFS NODE--
+sudo apt install nfs-common         # Na klientach
+
+sudo nano /etc/fstab
+
+192.168.10.10:/srv/public  /mnt/public  nfs  defaults,_netdev  0  0
+
+sudo mkdir -p /mnt/public /mnt/restricted
+
+# Na node1 (tylko odczyt):
+sudo mount -t nfs 192.168.10.10:/srv/restricted /mnt/restricted -o ro
+
+# Na node2 (odczyt i zapis):
+sudo mount -t nfs 192.168.10.10:/srv/restricted /mnt/restricted
+
+sudo mount -a
+
+ypcat passwd # tutaj sprawdzamy czy sie nam pokazują konta z main (nisuser1 i nisuser2)
