@@ -58,3 +58,46 @@ zeby sie odpalalo z systemem odrazu
 sudo reboot i patrzymy czy gra
 
 jak gra to bangla dalej
+
+# WAŻNE !!!
+
+sudo /usr/lib/yp/ypinit -m 
+
+jak wyświetla sie nazwa serwera tam wciskamy ctrl+d
+
+on se tam buduje i gra gitara potem rzekomo tak czat mówi męczyłem sie nad tym 2h xDDD!!!
+
+-- NIS CLIENT (Node 1 i 2) --
+lecimy na obydwu smigło raz
+sudo apt update && sudo apt install nis -y
+
+sudo nisdomainname nisArek && sudo echo "nisArek" > /etc/defaultdomain
+
+sudo nano /etc/yp.conf
+
+domain nisArek server 192.168.10.10
+
+
+
+# /etc/nsswitch.conf
+#
+# Example configuration of GNU Name Service Switch functionality.
+# If you have the `glibc-doc-reference' and `info' packages installed, try:
+# `info libc "Name Service Switch"' for information about this file.
+
+passwd:         files systemd nis sss
+group:          files systemd nis sss
+shadow:         files systemd nis sss
+gshadow:        files systemd
+
+hosts:          files mdns4_minimal [NOTFOUND=return] dns
+networks:       files
+
+protocols:      db files
+services:       db files sss
+ethers:         db files
+rpc:            db files
+
+netgroup:       nis [SUCCESS=return] sss
+automount:  sss
+
