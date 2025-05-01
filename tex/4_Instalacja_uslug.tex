@@ -1,4 +1,143 @@
 	\newpage
+	\lstdefinestyle{bashstyle}{
+		language=bash,
+		basicstyle=\ttfamily\footnotesize,
+		keywordstyle=\color{blue!90!black}\bfseries,
+		commentstyle=\color{gray}\itshape,
+		stringstyle=\color{green!70!black},
+		numbers=left,
+		numberstyle=\ttfamily\tiny\color{gray}\raisebox{0.5ex},
+		stepnumber=1,
+		numbersep=5pt,
+		breaklines=true,
+		frame=single,
+		backgroundcolor=\color{gray!5},
+		showspaces=false,
+		showstringspaces=false,
+		showtabs=false,
+		tabsize=4,
+		captionpos=b,
+		linewidth=\linewidth,
+		xleftmargin=20pt,
+		xrightmargin=5pt,
+		framexleftmargin=15pt,
+		framexrightmargin=5pt,
+		rulecolor=\color{blue!30},
+		literate=  % Corrected Polish character mappings
+		  {ą}{{\k{a}}}1 
+		  {ć}{{\'c}}1 
+		  {ę}{{\k{e}}}1 
+		  {ł}{{\l}}1 
+		  {ń}{{\'n}}1
+		  {ó}{{\'o}}1 
+		  {ś}{{\'s}}1 
+		  {ź}{{\'z}}1 
+		  {ż}{{\.{z}}}1
+		  {Ą}{{\k{A}}}1 
+		  {Ć}{{\'C}}1 
+		  {Ę}{{\k{E}}}1 
+		  {Ł}{{\L}}1
+		  {Ń}{{\'N}}1 
+		  {Ó}{{\'O}}1 
+		  {Ś}{{\'S}}1 
+		  {Ź}{{\'Z}}1 
+		  {Ż}{{\.{Z}}}1,
+		emph={sudo,apt-get,grep,awk,sed,chmod,chown,mv,cp,rm,mkdir,rmdir,cat,ps,kill,service,systemctl,apt},
+		emphstyle=\color{magenta!70!black},
+		lineskip=2pt,
+		aboveskip=10pt,
+		belowskip=10pt,
+		numberblanklines=false
+	}
+\lstset{style=bashstyle} % Ustawienia dla całego dokumentu
 \section{Procedury instalacyjne poszczególnych usług}		%4
 % Procedury instalacyjne poszczególnych usług.
 % (W podpunktach zamieścić polecenia dotyczące instalacji wdrażanych usług) 
+\subsection{Setup Maszyn Wirtualnych}
+
+Wszystkie poniższe kroki tj: \OznaczZdjecie[Rys.]{setup-01} - \OznaczZdjecie[Rys.]{setup-08} są wykonywane na maszynie każdej maszynie wirtualnej to jest: \texttt{MAIN}, \texttt{node1} oraz \texttt{node2}.
+
+\fg[0.75\linewidth]{rys/setup/01.png}{Rozpoczęcie instalacji serwera}{setup-01}
+\fg[0.75\linewidth]{rys/setup/02.png}{Wybór języka systemu}{setup-02}
+\clearpage
+\fg[0.75\linewidth]{rys/setup/03.png}{Wybór podstawy instalacji}{setup-03}
+\fg[0.75\linewidth]{rys/setup/04.png}{Wybór adresu dla karty sieciowej}{setup-04}
+\fg[0.75\linewidth]{rys/setup/05.png}{Wybór adresu mirroringu}{setup-05}
+\fg[0.75\linewidth]{rys/setup/06.png}{Analiza przestrzeni dyskowej}{setup-06}
+\fg[0.75\linewidth]{rys/setup/07.png}{Poprawna instalacja serwera}{setup-07}
+\clearpage
+Tutaj 2 opcjonalne kroki, które można wykonać w celu zainstalowania GUI na serwerze oraz dodatków gościa VirtualBox. Nie są one wymagane do działania usług NIS/NFS, ale mogą być przydatne w przypadku, gdy chcemy mieć dostęp do GUI na serwerze.
+
+	\begin{lstlisting}[ caption={Instalacja GUI na serwerze}, label={lst:setup-gui}]
+	
+	sudo apt update && sudo apt upgrade -y
+
+#(dla komfortu pracy.. kompletnie zbędny dla funkcjonalnosci)
+	sudo apt install ubuntu-desktop 
+
+	sudo systemctl set-default graphical.target
+
+#zamontowac wczesniej addon..
+
+	sudo mount /dev/cdrom /mnt
+	cd /mnt
+	sudo ./VBoxLinuxAdditions.run
+
+#potem w opcjach (2 kierunkowy schowek w celu ułatwienia pracy z GUI)
+	\end{lstlisting}
+% \fg[0.75\linewidth]{rys/setup/08.png}{08}{setup-08}
+% \fg[0.75\linewidth]{rys/setup/bruh2.png}{bruh2}{setup-bruh2}
+% \fg[0.75\linewidth]{rys/setup/bruh.png}{bruh}{setup-bruh}
+
+\subsection{Instalacja i konfiguracja NIS (main)}
+\label{sec:nis-installation}
+Rozpoczynamy od instalacji i konfiguracji NIS na serwerze głównym \texttt{MAIN}.\\
+Najpierw aktualizujemy system i instalujemy pakiet NIS tak jak na \OznaczZdjecie[Rys.]{NIS-01}.
+\fg[0.75\linewidth]{rys/NIS/01.png}{01}{NIS-01}
+\clearpage
+Następnie konfigurujemy adresy IP maszyn wirtualnych, aby mogły się ze sobą komunikować. W tym wchodzimy w ustawienia sieciowe Ubuntu i wybieramy opcję \texttt{Network} z menu. Wybieramy kartę sieciową, która ma być używana do komunikacji między maszynami wirtualnymi i ustawiamy jej adres IP na statyczny. Dla serwera \texttt{MAIN} możemy ustawić adres IP na \texttt{192.168.10.10} \OznaczZdjecie[Rys.]{NIS-02} i \OznaczZdjecie[Rys.]{NIS-03}. Dla pozostałych maszyn wirtualnych \texttt{node1} i \texttt{node2} ustawiamy adresy IP na \texttt{192.168.10.20} i \texttt{192.168.10.30} odpowiednio. Ustawiamy również maskę podsieci na \texttt{255.255.255.0}, brama oraz reszta ustawień pozostaje domyślna.\\
+
+\fg[0.75\linewidth]{rys/NIS/02.png}{Konfiguracja ip \texttt{MAIN} cz.1}{NIS-02}
+\clearpage
+\fg[0.75\linewidth]{rys/NIS/03.png}{Konfiguracja ip \texttt{MAIN} cz.2}{NIS-03}
+% \fg[0.75\linewidth]{rys/NIS/04.png}{04}{NIS-04}
+Nastepnie ustawiamy hostname dla serwera \texttt{MAIN} na \texttt{nisArek}, oraz "stały" hostname w pliku \texttt{/etc/defaultdomain} na \texttt{nisArek}. Zmieniamy też uprawnienia na \texttt{700}.\\
+
+\fg[0.75\linewidth]{rys/NIS/05.png}{Ustawianie nazwy domeny}{NIS-05}
+\clearpage
+Nastepnie edytujemy plik \texttt{/etc/default/nis} i zmieniamy w nim nazwę domeny na \texttt{nisArek} oraz status serwera na \texttt{master}.\\
+
+\fg[0.75\linewidth]{rys/NIS/06.png}{Konfiguracja pliku \texttt{/etc/default/nis}}{NIS-06}
+
+\vspace{-1cm}
+Nastepnie konfigurujemy plik \texttt{etc/ypuserv.securenetes} tak aby zawierał sieci którym chcemy udostępnić nasz serwer NIS. W naszym przypadku jest to \texttt{192.168.10.0/24} oraz localhosty (ipv4 i ipv6)\\
+\fg[0.75\linewidth]{rys/NIS/07.png}{Konfiguracja pliku \texttt{etc/ypuserv.securenetes}}{NIS-07}
+\clearpage
+
+Potem dodajemy linikę do pliku \texttt{/etc/yp.conf} aby nasz serwer NIS był widoczny w sieci:\\
+\begin{lstlisting}[ caption={Dodanie linii do pliku \texttt{/etc/yp.conf}}, label={lst:nis-ypconf}]
+	domain nisArek server 192.168.10.10
+	\end{lstlisting}
+% \fg[0.75\linewidth]{rys/NIS/08.png}{08}{NIS-08}
+Tutaj sprawdzamy na jakich portach działa nasz serwer NIS.\\
+\fg[0.75\linewidth]{rys/NIS/09.png}{Porty NIS}{NIS-09}
+% \fg[0.75\linewidth]{rys/NIS/10.png}{10}{NIS-10}
+
+Następnie aktywujemy uruchomianie serwera NIS przy starcie systemu.
+\fg[0.75\linewidth]{rys/NIS/11.png}{Uruchomianie przy starcie}{NIS-11}
+\clearpage
+Potem uruchomiamy \texttt{/usr/lib/yp/ypinit -m} aby zainicjować listę użytkowników i grup.\\
+\fg[0.75\linewidth]{rys/NIS/12.png}{Inicjacja \texttt{/usr/lib/yp/ypinit -m}}{NIS-12}
+
+\fg[0.75\linewidth]{rys/NIS/13.png}{Powodzenie \texttt{/usr/lib/yp/ypinit -m}}{NIS-13}
+\fg[0.75\linewidth]{rys/NIS/14.png}{Lista hostów, usług i grup NIS}{NIS-14}
+\clearpage
+Kończymy konfigurację serwera NIS uruchamiając go poleceniem \texttt{sudo systemctl restart ypserv}.\\
+Potem otwieramy porty na których komunikuje się NIS dla naszej sieci (\texttt{192.168.10.0/25})\\
+\fg[0.75\linewidth]{rys/NIS/15.png}{Poprawne uruchomienie usługi}{NIS-15}
+\fg[0.75\linewidth]{rys/NIS/16.png}{Otwarcie portów na których komunikuje sie NIS}{NIS-16}
+\clearpage
+
+\subsection{Instalacja i konfiguracja NIS (node1 i node2)} 
+
+
