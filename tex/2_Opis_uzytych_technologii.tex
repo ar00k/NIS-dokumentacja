@@ -2,4 +2,60 @@
 \section{Opis użytych technologii}		%2
 %(W podpunktach dokonać krótkiej charakterystyki użytych technologii ) 
 
+\subsection{Ubuntu live-server-amd64}
 
+\begin{itemize}
+    \item \textbf{Opis:} Ubuntu Server\cite{Ubuntu} to system operacyjny oparty na jądrze Linux, przeznaczony do pracy na serwerach. Jest to wersja Ubuntu, która nie zawiera graficznego interfejsu użytkownika (GUI), co czyni ją bardziej wydajną i odpowiednią do zastosowań serwerowych.
+    \item \textbf{Zastosowanie:} Używany jako system operacyjny dla serwera wirtualnego, na którym uruchamiane są usługi NIS i NFS\cite{linuxquestions}\cite{securenetes:Redhat}\cite{www1}\cite{www2}.
+    \item \textbf{Wersja:} 24.04.2
+    \item \textbf{Typ:} 64-bitowy (amd64)
+    \item \textbf{Tryb instalacji:} Server (opcjonalnie GUI Gnome, zostało zainstalowane w celu ułatwienia pracy z systemem)
+    \item \textbf{Minimalne wymagania sprzętowe:}
+    \begin{itemize}
+        \item Pamięć RAM: 4096 MB (serwer), 2048 MB (klienty)
+        \item Procesor: 2 rdzenie (serwer), 1-2 rdzenie (klienty)
+        \item Dysk twardy: 20-35 GB (przydzielany dynamicznie)
+    \end{itemize}
+\end{itemize}
+\subsection{VirtualBox}
+
+\begin{itemize}
+    \item \textbf{Opis:} VirtualBox\cite{VirtualBox} to oprogramowanie do wirtualizacji, które pozwala na uruchamianie wielu systemów operacyjnych na jednym fizycznym komputerze. Umożliwia tworzenie i zarządzanie maszynami wirtualnymi (VM).
+    \item \textbf{Zastosowanie:} Używane do tworzenia i zarządzania maszynami wirtualnymi, na których uruchamiane są systemy operacyjne Ubuntu Server.
+    \item \textbf{Wersja:} 7.0.18 r162988 (Qt5.15.2)
+    \item \textbf{Typ:} Oprogramowanie typu open-source
+    \item \textbf{Minimalne wymagania sprzętowe:}
+    \begin{itemize}
+        \item Procesor: 64-bitowy procesor z obsługą wirtualizacji (Intel VT-x lub AMD-V)
+        \item Pamięć RAM: 4 GB (zalecane)
+    \end{itemize}
+\end{itemize}
+\subsection{NIS (Network Information Service)}
+\begin{itemize}
+    \item \textbf{Opis:} NIS to protokół sieciowy używany do centralnego zarządzania informacjami o użytkownikach i grupach w sieci. Umożliwia automatyczne udostępnianie informacji o użytkownikach między różnymi systemami operacyjnymi.
+    \item \textbf{Zastosowanie:} Używany do zarządzania kontami użytkowników i grupami w sieci, co ułatwia administrację systemem.
+    \item \textbf{Wersja:} 3.17
+    \item \textbf{Typ:} Protokół sieciowy
+    \item \textbf{Minimalne wymagania sprzętowe:} Brak specyficznych wymagań sprzętowych, ale wymaga działającego serwera NIS.
+    \item \textbf{Wymagania systemowe:} System operacyjny Linux z zainstalowanym pakietem NIS.
+    \item \textbf{Potencjalne wady:} Użycie NIS może prowadzić do problemów z bezpieczeństwem, ponieważ informacje o użytkownikach są przesyłane w postaci \textbf{niezaszyfrowanej}. W związku z tym zaleca się stosowanie NIS tylko w zaufanych sieciach.
+\end{itemize}
+\subsection{NFS (Network File System)}
+\begin{itemize}
+    \item \textbf{Opis:} NFS to protokół sieciowy używany do udostępniania systemów plików w sieci. Umożliwia zdalny dostęp do plików i katalogów na innych komputerach w sieci.
+    \item \textbf{Zastosowanie:} Używany do udostępniania katalogu domowego użytkowników między różnymi systemami operacyjnymi w sieci.
+    \item \textbf{Wersja:} 4.2
+    \item \textbf{Typ:} Protokół sieciowy
+    \item \textbf{Minimalne wymagania sprzętowe:} Brak specyficznych wymagań sprzętowych, ale wymaga działającego serwera NFS.
+    \item \textbf{Wymagania systemowe:} System operacyjny Linux z zainstalowanym pakietem NFS.
+    \item \textbf{Zalety:} Umożliwia współdzielenie plików i katalogów między różnymi użytkownikami czy nawet systemami operacyjnymi, co ułatwia współpracę w zespole.
+\end{itemize}
+
+\subsection{Draw.io}
+
+\begin{itemize}
+    \item \textbf{Opis:} Draw.io\cite{drawio} to narzędzie do tworzenia diagramów i schematów blokowych. Zostało użyte do stworzenia schematu logicznego projektu \OznaczZdjecie[Rys.]{rys-NISschemat}
+    \item \textbf{Zastosowanie:} Używane do tworzenia diagramów i schematów blokowych w dokumentacji projektowej.
+    \item \textbf{Typ:} Narzędzie online
+    \item \textbf{Minimalne wymagania sprzętowe:} Brak specyficznych wymagań sprzętowych, ale wymaga przeglądarki internetowej.
+\end{itemize}
