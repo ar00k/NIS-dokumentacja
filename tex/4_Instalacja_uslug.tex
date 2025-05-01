@@ -138,6 +138,31 @@ Potem otwieramy porty na których komunikuje się NIS dla naszej sieci (\texttt{
 \fg[0.75\linewidth]{rys/NIS/16.png}{Otwarcie portów na których komunikuje sie NIS}{NIS-16}
 \clearpage
 
-\subsection{Instalacja i konfiguracja NIS (node1 i node2)} 
+\subsection{Instalacja i konfiguracja NIS (node1 i node2)}
+
+Poniższe kroki są wykonywane na maszynach klienckich \texttt{node1} oraz \texttt{node2}. Jeżeli nie jest to wyspecyifikowane inaczej, kroki są takie same jak dla \texttt{node1} i \texttt{node2}.\\
+
+\label{sec:nis-installation-node}
+Zaczynamy od instalacji NIS oraz ustawieniu hostname:\\
+\fg[0.75\linewidth]{rys/NIS-CLIENT/01.png}{Instalacja usługi}{NIS-CLIENT-01}
+\fg[0.75\linewidth]{rys/NIS-CLIENT/02.png}{Zmiana hostname}{NIS-CLIENT-02}
+
+Potem dodajemy linikę do pliku \texttt{/etc/yp.conf} aby nasz serwer NIS był widoczny dla Node1 i Node2:\\
+\fg[0.75\linewidth]{rys/NIS-CLIENT/03.png}{03}{NIS-CLIENT-03}
+
+\clearpage
+Następnie restartujemy usługę ypbind.\\
+
+\fg[0.75\linewidth]{rys/NIS-CLIENT/04.png}{Reset usługi ypbind}{NIS-CLIENT-04}
+
+Wykonujemy komendę \texttt{sudo reboot}, potem sprawdzamy zawartość pliku passwd, aby upewnić się, że użytkownicy są widoczni w systemie (W tym momencie nie byli stworzeni użytkownicy dla nodeów).\\ 
+
+\fg[0.75\linewidth]{rys/NIS-CLIENT/06-poReboot.png}{Weryfikacja usługi}{NIS-CLIENT-06-poReboot}
+\clearpage
+
+\subsection{Instalacja i konfiguracja NFS (main)}
+\label{sec:nfs-installation}
+
+
 
 
