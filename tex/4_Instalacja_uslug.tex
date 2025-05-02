@@ -93,7 +93,7 @@ Tutaj 2 opcjonalne kroki, które można wykonać w celu zainstalowania GUI na se
 \label{sec:nis-installation}
 Rozpoczynamy od instalacji i konfiguracji NIS na serwerze głównym \texttt{MAIN}.\\
 Najpierw aktualizujemy system i instalujemy pakiet NIS tak jak na \OznaczZdjecie[Rys.]{NIS-01}.
-\fg[0.75\linewidth]{rys/NIS/01.png}{01}{NIS-01}
+\fg[0.75\linewidth]{rys/NIS/01.png}{Instalacja }{NIS-01}
 \clearpage
 Następnie konfigurujemy adresy IP maszyn wirtualnych, aby mogły się ze sobą komunikować. W tym wchodzimy w ustawienia sieciowe Ubuntu i wybieramy opcję \texttt{Network} z menu. Wybieramy kartę sieciową, która ma być używana do komunikacji między maszynami wirtualnymi i ustawiamy jej adres IP na statyczny. Dla serwera \texttt{MAIN} możemy ustawić adres IP na \texttt{192.168.10.10} \OznaczZdjecie[Rys.]{NIS-02} i \OznaczZdjecie[Rys.]{NIS-03}. Dla pozostałych maszyn wirtualnych \texttt{node1} i \texttt{node2} ustawiamy adresy IP na \texttt{192.168.10.20} i \texttt{192.168.10.30} odpowiednio. Ustawiamy również maskę podsieci na \texttt{255.255.255.0}, brama oraz reszta ustawień pozostaje domyślna.\\
 
@@ -199,6 +199,48 @@ Potem wykonujemy polecenie \texttt{sudo exportfs -arv} aby zaktualizować plik \
 
 \fg[0.75\linewidth]{rys/NFS/07.png}{Sprawdzanie zamontowanych katalogów}{NFS-07}
 % \fg[0.75\linewidth]{rys/NFS/08.png}{08}{NFS-08}
-\clearpage
-
 % \fg[0.75\linewidth]{rys/NFS/09.png}{09}{NFS-09}
+\clearpage
+\subsection{Instalacja i konfiguracja NFS (node1 i node2)}
+\label{sec:nfs-installation-node}
+
+Na początku wykonujemy aktualizację systemu oraz instalację NFS. Oraz dodajemy rekordy do pliku fstab, aby katalogi były montowane przy starcie systemu. Tutaj \texttt{node1} i \texttt{node2} mają zamontowane katalogi \texttt{/srv/public} oraz \texttt{/srv/restricted}.\\
+\vspace{-0.8cm}
+\begin{lstlisting}[ caption={Instalacja NFS(\texttt{node 1 i node 2})}, label={lst:nfs-installation}]
+	sudo apt update && sudo apt upgrade -y
+	sudo apt install nfs-common -y
+	\end{lstlisting}
+	\vspace{-0.8cm}
+\fg[0.75\linewidth]{rys/NFS-CLIENT/01-1.png}{Automatyczne montowanie dla \texttt{node1}}{NFS-CLIENT-01-1}
+\fg[0.75\linewidth]{rys/NFS-CLIENT/01.png}{Automatyczne montowanie dla \texttt{node2}}{NFS-CLIENT-01}
+
+\clearpage
+Następnie montujemy katalogi ręcznie, aby sprawdzić czy wszystko działa poprawnie. W przypadku node1 dodajemy atrybuty \texttt{-o -ro} w celu zamontowania katalogu \texttt{/srv/restricted} w trybie tylko do odczytu.\\
+\fg[0.75\linewidth]{rys/NFS-CLIENT/02.png}{Montowanie katalogu dla \texttt{node 2}}{NFS-CLIENT-02}
+
+\fg[0.75\linewidth]{rys/NFS-CLIENT/03.png}{Montawanie katalogu dla \texttt{node1}}{NFS-CLIENT-03}
+Potem sprawdzamy czy katalogi są zamontowane poprawnie. 
+\fg[0.75\linewidth]{rys/NFS-CLIENT/04.png}{Tworzenie pliku\texttt{test.txt}}{NFS-CLIENT-04}
+
+
+\fg[0.75\linewidth]{rys/NFS-CLIENT/05.png}{Wyświetlanie pliku \texttt{test.txt} na maszynie \texttt{node2}}{NFS-CLIENT-05}
+\clearpage
+Jako następny krok sprawdzamy czy użytkownicy są widoczni w systemie. W tym przypadku użytkownicy \texttt{nisuser1} oraz \texttt{nisuser2}.\\
+
+\fg[0.75\linewidth]{rys/NFS-CLIENT/06.png}{Rezultat komendy \texttt{ypcat passwd}}{NFS-CLIENT-06}
+
+Potem, logując się na użytkownika \texttt{nisuser1} oraz \texttt{nisuser2} sprawdzamy czy mają oni poprawne permisje do katalogu \texttt{/srv/restricted}.\\
+
+\fg[0.75\linewidth]{rys/NFS-CLIENT/07.png}{Sprawdzanie permisji dla \texttt{nisuser2} (ma działać)}{NFS-CLIENT-07}
+\fg[0.75\linewidth]{rys/NFS-CLIENT/08.png}{Sprawdzanie permisji dla \texttt{nisuser1} (odmowa dostępu)}{NFS-CLIENT-08}
+\clearpage
+Następne rysunki \OznaczZdjecie[Rys.]{NFS-CLIENT-09} - \OznaczZdjecie[Rys.]{NFS-CLIENT-012} to testowanie logowania sie na użytkownikach i ponownego dostępu do katalogu, już po restarcie systemu.\\
+\fg[0.75\linewidth]{rys/NFS-CLIENT/09.png}{Logowanie sie na użytkownika \texttt{nisuser2} na \texttt{node 2}}{NFS-CLIENT-09}
+\fg[0.75\linewidth]{rys/NFS-CLIENT/10.png}{Zakończenie logowania z sukcesem}{NFS-CLIENT-10}
+\clearpage
+\begin{lstlisting}[ caption={Restartowanie systemu}, label={lst:nfs-restart}]
+	sudo reboot
+	\end{lstlisting}
+\fg[0.75\linewidth]{rys/NFS-CLIENT/11.png}{testowanie działania po restarcie 1}{NFS-CLIENT-11}
+\fg[0.75\linewidth]{rys/NFS-CLIENT/012.png}{testowanie działania po restarcie 2}{NFS-CLIENT-012}
+\clearpage

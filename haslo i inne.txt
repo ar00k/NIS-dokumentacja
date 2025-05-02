@@ -28,10 +28,10 @@ KLUCZOWE ZMIANY
 
 # /etc/default/nis
 YPPWDDIR=/etc
-YPCHANGEOK=chsh
+YPCHANGEOK=chsh #tego i tego wyżej nawet nie ustawiałem chacik proponował
 NISSERVER=master  # <-- TO JEST KLUCZOWA LINIA!
 NISMASTER=nisArek  # (opcjonalnie, jeśli masz wielu serwerów)
-YPSERVARGS=""
+YPSERVARGS="" #tego tez nie ustawiałem, piszcie bez komentarzy 4 safety
 
 # /etc/ypserv.securenets
 # Zawsze zezwalaj na localhost (IPv4 i IPv6)
@@ -114,9 +114,8 @@ sudo adduser --shell /bin/bash --home /home/nisuser2 nisuser2
 
 sudo groupadd nisusers
 
-sudo usermod -aG nisusers nisuser1  # lub nisUser1
-sudo usermod -aG nisusers nisuser2  # lub nisUser2
-
+sudo usermod -aG nisusers nisuser1  
+sudo usermod -aG nisusers nisuser2 
 
 sudo mkdir -p /srv/public /srv/restricted
 sudo chmod 777 /srv/public          # Pełne uprawnienia dla wszystkich
@@ -153,3 +152,16 @@ sudo mount -t nfs 192.168.10.10:/srv/restricted /mnt/restricted
 sudo mount -a
 
 ypcat passwd # tutaj sprawdzamy czy sie nam pokazują konta z main (nisuser1 i nisuser2)
+
+
+
+----- TROUBLESHOOTING -----
+
+sudo systemctl status ypserv yppasswdd ypxfrd - status zbychów
+
+sudo /usr/lib/yp/ypinit -m tym sobie odpalamy NIS (jak juz dziala wszystko na main)
+
+jak mapy trollują i coś źle sie tworzą:
+sudo rm -rf /var/yp/nisArek/* gdzie nisArek to nazwa domeny
+
+cat /etc/defaultdomain  # w tym pliku ma byc nazwa domeny (NIS sobie ciagnie z niej po reboocie)
